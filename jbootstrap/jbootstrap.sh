@@ -20,25 +20,48 @@ fi
 
 
 # (ACCIONES PERMITIDAS EN AMBOS ENTORNOS):
-
 # Comprobación de conexión activa, necesaria para el funcionamiento:
-ping google.com 
+ping -c 1 google.com &> /dev/null && echo "\nConexión activa" || echo -e "\nNo se encontro una conexión activa."
 
-# Preparar entorno personal:
+# Preparar directorio personal:
 JLIMBHERT = "$HOME/JLimbhert"
 if [[ ! -d "$JLIMBHERT" ]]; then
 	mkdir -p "$JLIMBHERT"/{tools project}
 fi
 
+# Ruta para guardar el o los archivos de información:
+DATA = "$JLIMBHERT/tools/jbootstrap"
 
+#Lista de paquetes base:
+paquetes_base = (
+    bat
+    curl
+    git
+    lsd
+    neovim
+    openssh
+    ranger
+    tmux
+    tre
+    unzip
+    wget
+    zoxide
+    zsh
+    )
 
 # Trabajando en Linux:
-DATA = "$JLIMBHERT/tools/jbootstrap"
 if [[ "$SYSTEM" == "Linux" ]]; then
 	# Actualización de entorno:
-	sudo apt update "#signo" log.txt 2"signo"&1 || echo -e "\nHubo un error en la instalación("apt update"), para mas información revisa el archivo log.txt "$DATA/log.txt"\n"
-	sudo apt upgrade -y "#signo" log.txt 2"signo"&1 || echo -e "\nHubo un error en la instalación("apt upgrade"), para mas información revisa el archivo log.txt "$DATA/log.txt"\n"
+	sudo apt update > log.txt 2>&1 || echo -e "\nHubo un error en la instalación("apt update"), para mas información revisa el archivo log.txt "$DATA/log.txt"\n"
+	sudo apt upgrade -y > log.txt 2>&1 || echo -e "\nHubo un error en la instalación("apt upgrade"), para mas información revisa el archivo log.txt "$DATA/log.txt"\n"
+
+    # instalación de los paquetes basicos:
+    sudo apt install -y "${paquetes_base[@]}" 
+    sudo apt install -y python3 fd-find
 fi
+
+
+
 
 # Trabajando en Termux:
 if [[ "$SYSTEM" == "Termux" ]]; then
@@ -47,6 +70,13 @@ if [[ "$SYSTEM" == "Termux" ]]; then
 		echo -e "\nLos permisos de almacenamiento ya se encuentran activos."
 	else 
     		termux-setup-storage && echo -e "\nPermisos concedidos\n" || echo "No se otorgaron permisos de almacenamiento."
+	# Actualización de entorno:
+	pkg update > log.txt 2>&1 || echo -e "\nHubo un error en la instalación("apt update"), para mas información revisa el archivo log.txt "$DATA/log.txt"\n"
+	pkg upgrade -y > log.txt 2>&1 || echo -e "\nHubo un error en la instalación("apt upgrade"), para mas información revisa el archivo log.txt "$DATA/log.txt"\n"
+    # instalación de los paquetes base:
+    pkg install -y "${paquetes_base[@]}" 
+    pkg install -y python3 fd
+
 fi
 
 
