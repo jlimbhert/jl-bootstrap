@@ -1,0 +1,67 @@
+PING google.com (64.233.186.138) 56(84) bytes of data.
+64 bytes from cb-in-f138.1e100.net (64.233.186.138): icmp_seq=1 ttl=103 time=336 ms
+
+--- google.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 336.602/336.602/336.602/0.000 ms
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://mirror.mwt.me/termux/main: ok
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://mirror.mwt.me/termux/main stable InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://mirror.mwt.me/termux/main: ok
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://mirror.mwt.me/termux/main stable InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following package was automatically installed and is no longer required:
+  libicu
+Use 'apt autoremove' to remove it.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://mirror.mwt.me/termux/main: ok
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+bat is already the newest version (0.26.1-1).
+curl is already the newest version (8.22.0).
+git is already the newest version (2.55.0).
+lsd is already the newest version (1.2.0).
+neovim is already the newest version (0.12.5-1).
+openssh is already the newest version (10.5p1).
+ranger is already the newest version (1.9.4-2).
+tmux is already the newest version (3.7c).
+tree is already the newest version (2.3.2).
+unzip is already the newest version (6.0-10).
+wget is already the newest version (1.25.0-1).
+zoxide is already the newest version (0.10.0).
+zsh is already the newest version (5.9.2-1).
+python is already the newest version (3.14.6-1).
+fd is already the newest version (10.5.0).
+The following package was automatically installed and is no longer required:
+  libicu
+Use 'apt autoremove' to remove it.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
