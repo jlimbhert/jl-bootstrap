@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Spinner
+# ==========================================================
+# FUNCION: SPINNER
+# ==========================================================
 spinner(){
     local pid=$1
     local spinner_chars=('|' '/' '-' '\')
@@ -16,20 +18,22 @@ spinner(){
     echo -n -e "\r"
 }
 
-# Limpiar terminal:
-clear 
+# ==========================================================
+# INICIO / PRESENTACION
+# ==========================================================
+clear
 
-# Imprimir nombre de la herramienta CLI
 echo -e "Jbootstrap\n\n"
 echo -e "Bienvenido JL,\nIniciando instalación personalizada del sistema..."
 
 # Contador de errores:
 ERROR=0
 
-
-# Deteccion del sistema
+# ==========================================================
+# DETECCION DEL SISTEMA
+# ==========================================================
 echo -e "Detectando sistema..."
-if [[ -z "$PREFIX" ]]; then 
+if [[ -z "$PREFIX" ]]; then
 	SYSTEM="Linux"
 	echo -e "\nTrabajando en Linux..."
 else
@@ -37,13 +41,13 @@ else
 	echo -e "\nTrabajando en Termux..."
 fi
 
+# ==========================================================
+# ACCIONES PERMITIDAS EN AMBOS ENTORNOS
+# ==========================================================
 
-# ACCIONES PERMITIDAS EN AMBOS ENTORNOS:
-
-# Preparar directorio personal:
+# --- Preparar directorio personal ---
 # Designar nombre del directorio principal:
-
-echo -e "Ingresa el nombre de el directorio principal:\n" 
+echo -e "Ingresa el nombre de el directorio principal:\n"
 read DIR_PRINCIPAL
 # Ruta del directorio principal para el entorno
 DIR_PRINCIPAL="$HOME/$DIR_PRINCIPAL"
@@ -54,21 +58,20 @@ else
     echo -e "\nEstrucutura existente encontrada."
 fi
 
-
-# Rutas para el directorio raiz de la herramienta bootstrap e hijos
+# --- Rutas para el directorio raiz de la herramienta bootstrap e hijos ---
 DIR_BOOTSTRAP=$(dirname "$0")
 DIR_DATA="$DIR_BOOTSTRAP/data"
 FILE_LOG="$DIR_DATA/log.txt"
 
-# Creación de la carpeta data
+# --- Creación de la carpeta data ---
 echo -e "Se creo la carpeta '$DIR_DATA'.\n"
 mkdir -p "$DIR_DATA"
 
-# Comprobación de conexión activa, necesaria para el funcionamiento:
+# --- Comprobación de conexión activa, necesaria para el funcionamiento ---
 echo -e "\nComprobando conexion a internet..."
 ping -c 1 google.com &> "$FILE_LOG" && echo -e "Conexión activa\n" || echo -e "\nNo se encontro una conexión activa."
 
-#Lista de paquetes base:
+# --- Lista de paquetes base ---
 paquetes_base=(
     bat
     curl
@@ -85,62 +88,72 @@ paquetes_base=(
     zsh
     )
 
-# Trabajando en Linux:
+# ==========================================================
+# BLOQUE LINUX
+# ==========================================================
 if [[ "$SYSTEM" == "Linux" ]]; then
-	# Actualización de entorno:
+	# --- Actualización de entorno ---
     echo -e "Actualizando lista de paquetes..."
-	sudo apt update >> "$FILE_LOG" 2>&1 & 
+	sudo apt update >> "$FILE_LOG" 2>&1 &
     PID=$!
     spinner "$PID"
     wait $PID
     if [[ $? -ne 0 ]]; then
-        echo -e "\nHubo un error en la instalación('apt update'), para mas información revisa el archivo log.txt "$FILE_LOG"\n"
-        ERROR=1 
+        echo -e "\nHubo un error en la instalación('apt update'), para mas información revisa el archivo log.txt '$FILE_LOG'\n"
+        ERROR=1
     fi
 
     echo -e "Actualizando entorno de Linux..."
-	sudo apt upgrade -y >> "$FILE_LOG" 2>&1 & 
+	sudo apt upgrade -y >> "$FILE_LOG" 2>&1 &
     PID=$!
     spinner "$PID"
     wait $PID
     if [[ $? -ne 0 ]]; then
-        echo -e "\nHubo un error en la instalación('apt upgrade'), para mas información revisa el archivo log.txt "$FILE_LOG"\n"
-        ERROR=1 
+        echo -e "\nHubo un error en la instalación('apt upgrade'), para mas información revisa el archivo log.txt '$FILE_LOG'\n"
+        ERROR=1
     fi
 
-    # instalación de los paquetes basicos:
-    sudo apt install -y "${paquetes_base[@]}" python3 fd-find >> "$FILE_LOG" 2>&1 & 
+    # --- Instalación de los paquetes basicos ---
+    echo -e "Instalando paquetes base para el funcionamiento de Linux..."
+
+    echo -e "Acontinuacion se instalaran los siguientes paquetes:\n"
+    for paquete in "${paquetes_base[@]}"; do
+        echo "$paquete"
+    done
+    echo ""
+
+    sudo apt install -y "${paquetes_base[@]}" python3 fd-find >> "$FILE_LOG" 2>&1 &
     PID=$!
     spinner "$PID"
     wait $PID
     if [[ $? -ne 0 ]]; then
-        echo -e "\nHubo un e    rror en la instalación, para mas información revisa el archivo log.txt '$FILE_LOG'\n"
-        ERROR=1 
+        echo -e "\nHubo un error en la instalación, para mas información revisa el archivo log.txt '$FILE_LOG'\n"
+        ERROR=1
     fi
 fi
 
-
-
-# Trabajando en Termux:
+# ==========================================================
+# BLOQUE TERMUX
+# ==========================================================
 if [[ "$SYSTEM" == "Termux" ]]; then
-	# Solicitar permisos de almacenamiento en termux:
+	# --- Solicitar permisos de almacenamiento en termux ---
     echo -e "\nSolicitando permisos de almacenamiento..."
 	if [[ -d "$HOME/storage" ]]; then
         echo -e "Los permisos de almacenamiento ya se encuentran activos."
-	else 
+	else
     	termux-setup-storage && echo -e "Permisos concedidos\n" || echo "No se otorgaron permisos de almacenamiento."
     fi
-	# Actualización de entorno:
+
+	# --- Actualización de entorno ---
     echo -e "\nActualizando lista de paquetes..."
-	pkg update >> "$FILE_LOG" 2>&1 & 
+	pkg update >> "$FILE_LOG" 2>&1 &
     PID=$!
     spinner "$PID"
     wait $PID
     if [[ $? -ne 0 ]]; then
         echo -e "\nHubo un error en la instalación('pkg update'), para mas información revisa el archivo log.txt '$FILE_LOG'\n"
-        ERROR=1 
+        ERROR=1
     fi
-
 
     echo -e "\nActualizando entorno de Termux..."
 	pkg upgrade -y >> "$FILE_LOG" 2>&1 &
@@ -149,14 +162,14 @@ if [[ "$SYSTEM" == "Termux" ]]; then
     wait $PID
     if [[ $? -ne 0 ]]; then
         echo -e "\nHubo un error en la instalación('pkg upgrade'), para mas información revisa el archivo log.txt '$FILE_LOG'\n"
-        ERROR=1 
+        ERROR=1
     fi
 
-    # instalación de los paquetes base:
+    # --- Instalación de los paquetes base ---
     echo -e "Instalando paquetes base para el funcionamiento de Termux..."
 
     echo -e "Acontinuacion se instalaran los siguientes paquetes:\n"
-    for paquete in "${paquetes_base[@]}";do 
+    for paquete in "${paquetes_base[@]}"; do
         echo "$paquete"
     done
     echo ""
@@ -166,16 +179,18 @@ if [[ "$SYSTEM" == "Termux" ]]; then
     spinner "$PID"
     wait $PID
     if [[ $? -ne 0 ]]; then
-    echo -e "\nError en la instalación"
-        ERROR=1 
+        echo -e "\nError en la instalación"
+        ERROR=1
     fi
 fi
 
-# Resultados final
+# ==========================================================
+# RESULTADO FINAL
+# ==========================================================
 if [[ "$ERROR" -eq 0 ]]; then
-    echo -e "\ninstalación completada con exito"
+    echo -e "\ninstalación completada con exito" | tee -a "$FILE_LOG"
 else
-    echo "Hubo errores, revisa el log"
+    echo "Hubo errores, revisa el log" | tee -a "$FILE_LOG"
 fi
 
 echo -e "\n\n\n"
@@ -186,3 +201,4 @@ echo -e "Presiona enter para continuar..."
 read salir
 clear
 exit
+
