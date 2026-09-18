@@ -20,7 +20,7 @@ B_BLANCO='\033[1;37m'
 
 NEGRITA='\033[1m'
 SUBRAYADO='\033[4m'
-RESET='\033[0m'   # siempre al final, para no arrastrar el color
+RESET='\033[0m'
 
 
 CHECK='✔'

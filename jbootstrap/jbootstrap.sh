@@ -23,7 +23,7 @@ spinner(){
 # ==========================================================
 clear
 
-echo -e "Jbootstrap\n\n"
+echo -e "${AZUL}Jbootstrap${RESET}\n\n"
 echo -e "Bienvenido JL,\nIniciando instalación personalizada del sistema..."
 
 # Contador de errores:
